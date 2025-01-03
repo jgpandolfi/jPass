@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- SEO -->
+    <title>
+      Emissão de Ingressos | jPass - Sistema de Gerenciamento de Ingressos
+    </title>
+    <meta
+      name="description"
+      content="Sistema de emissão de ingressos jPass - Geração segura de ingressos para eventos"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Segurança -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: blob: https:; script-src 'self'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- PWA -->
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <!-- Preload recursos críticos -->
+    <link rel="preload" href="styles.css" as="style" />
+    <link rel="preload" href="scripts.js" as="script" />
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../assets/favicon-32x32.png"
+    />
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+  </head>
+  <body>
+    <div class="pagina-wrapper">
+      <!-- Cabeçalho -->
+      <header class="cabecalho">
+        <div class="container">
+          <div class="cabecalho-conteudo">
+            <img
+              src="../assets/logo.svg"
+              alt="Logo jPass"
+              width="120"
+              height="40"
+              class="logo"
+            />
+
+            <button
+              type="button"
+              class="botao-voltar"
+              id="botaoVoltar"
+              aria-label="Voltar ao painel"
+            >
+              Voltar ao Painel
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Conteúdo Principal -->
+      <main class="conteudo-principal">
+        <div class="container">
+          <section class="secao-emissao" id="secaoFormulario">
+            <h1>Emitir Novo Ingresso</h1>
+
+            <form id="formEmissao" class="formulario-emissao">
+              <!-- Lote e Pagamento -->
+              <div class="grupo-campos">
+                <div class="campo-form">
+                  <label for="loteIngresso" class="campo-obrigatorio"
+                    >Lote do Ingresso</label
+                  >
+                  <select id="loteIngresso" name="loteIngresso" required>
+                    <option value="">Selecione o lote</option>
+                    <!-- Opções serão preenchidas via JavaScript -->
+                  </select>
+                </div>
+
+                <div class="campo-form">
+                  <label class="campo-obrigatorio">Pagamento Efetuado</label>
+                  <div class="opcoes-radio">
+                    <label class="radio-label">
+                      <input
+                        type="radio"
+                        name="pagamentoEfetuado"
+                        value="sim"
+                        required
+                      />
+                      <span>Sim</span>
+                    </label>
+                    <label class="radio-label">
+                      <input
+                        type="radio"
+                        name="pagamentoEfetuado"
+                        value="nao"
+                        required
+                      />
+                      <span>Não</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="campo-form">
+                  <label for="formaPagamento" class="campo-obrigatorio"
+                    >Forma de Pagamento</label
+                  >
+                  <select id="formaPagamento" name="formaPagamento" required>
+                    <option value="">Selecione a forma de pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="credito">Cartão de Crédito</option>
+                    <option value="debito">Cartão de Débito</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Dados do Comprador -->
+              <div class="grupo-campos">
+                <h2>Dados do Comprador</h2>
+
+                <div class="campo-form">
+                  <label for="nomeComprador" class="campo-obrigatorio"
+                    >Nome Completo</label
+                  >
+                  <input
+                    type="text"
+                    id="nomeComprador"
+                    name="nomeComprador"
+                    required
+                    maxlength="100"
+                    placeholder="Digite o nome completo"
+                  />
+                </div>
+
+                <div class="campo-form">
+                  <label for="cpfComprador" class="campo-obrigatorio"
+                    >CPF</label
+                  >
+                  <input
+                    type="text"
+                    id="cpfComprador"
+                    name="cpfComprador"
+                    required
+                    pattern="\d{11}"
+                    maxlength="11"
+                    placeholder="Digite apenas números"
+                  />
+                </div>
+
+                <div class="campo-form">
+                  <label for="rgComprador" class="campo-obrigatorio">RG</label>
+                  <input
+                    type="text"
+                    id="rgComprador"
+                    name="rgComprador"
+                    required
+                    maxlength="20"
+                    placeholder="Digite o RG"
+                  />
+                </div>
+
+                <div class="campo-form">
+                  <label for="telefoneComprador" class="campo-obrigatorio"
+                    >Telefone/WhatsApp</label
+                  >
+                  <input
+                    type="tel"
+                    id="telefoneComprador"
+                    name="telefoneComprador"
+                    required
+                    maxlength="20"
+                    placeholder="(00) 00000-0000"
+                  />
+                </div>
+              </div>
+
+              <!-- Dados do Vendedor e Observações -->
+              <div class="grupo-campos">
+                <div class="campo-form">
+                  <label for="nomeVendedor" class="campo-obrigatorio"
+                    >Nome do Vendedor</label
+                  >
+                  <input
+                    type="text"
+                    id="nomeVendedor"
+                    name="nomeVendedor"
+                    required
+                    maxlength="100"
+                    placeholder="Digite o nome do vendedor"
+                  />
+                </div>
+
+                <div class="campo-form">
+                  <label for="observacoes">Observações Adicionais</label>
+                  <textarea
+                    id="observacoes"
+                    name="observacoes"
+                    rows="3"
+                    maxlength="500"
+                    placeholder="Digite observações adicionais (opcional)"
+                  ></textarea>
+                </div>
+              </div>
+
+              <button type="submit" class="botao-emitir">
+                Emitir Ingresso
+              </button>
+            </form>
+          </section>
+
+          <!-- Seção de Resultado (inicialmente oculta) -->
+          <section class="secao-resultado" id="secaoResultado" hidden>
+            <h2>Ingresso Emitido com Sucesso!</h2>
+
+            <div class="card-qrcode">
+              <img
+                id="qrCode"
+                alt="QR Code do ingresso"
+                class="qrcode-imagem"
+              />
+              <p class="id-ingresso" id="idIngresso"></p>
+            </div>
+
+            <div class="dados-ingresso">
+              <div class="dado-item">
+                <span class="dado-label">Data de Emissão:</span>
+                <span class="dado-valor" id="dataEmissao"></span>
+              </div>
+              <div class="dado-item">
+                <span class="dado-label">Lote:</span>
+                <span class="dado-valor" id="loteInfo"></span>
+              </div>
+              <div class="dado-item">
+                <span class="dado-label">Preço:</span>
+                <span class="dado-valor" id="precoInfo"></span>
+              </div>
+              <div class="dado-item">
+                <span class="dado-label">Proprietário:</span>
+                <span class="dado-valor" id="proprietarioInfo"></span>
+              </div>
+              <div class="dado-item">
+                <span class="dado-label">CPF:</span>
+                <span class="dado-valor" id="cpfInfo"></span>
+              </div>
+              <div class="dado-item">
+                <span class="dado-label">Vendedor:</span>
+                <span class="dado-valor" id="vendedorInfo"></span>
+              </div>
+              <div class="dado-item">
+                <span class="dado-label">Observações:</span>
+                <span class="dado-valor" id="observacoesInfo"></span>
+              </div>
+            </div>
+
+            <div class="acoes-resultado">
+              <button type="button" class="botao-imprimir" id="botaoImprimir">
+                Imprimir Ingresso
+              </button>
+              <button type="button" class="botao-novo" id="botaoNovoIngresso">
+                Emitir Novo Ingresso
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- Modal Loading -->
+      <div class="modal-loading" id="modalLoading" hidden>
+        <div class="loading-spinner"></div>
+        <p>Gerando ingresso...</p>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts.js" defer></script>
+
+    <noscript>
+      <div class="mensagem-js-desativado">
+        Para utilizar este sistema, é necessário habilitar o JavaScript no seu
+        navegador.
+      </div>
+    </noscript>
+  </body>
+</html>

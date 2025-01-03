@@ -1,0 +1,66 @@
+{
+  "name": "jpass-backend",
+  "version": "1.0.0",
+  "description": "Sistema de gerenciamento e validação de ingressos",
+  "main": "server.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "lint": "eslint src/**/*.js",
+    "test": "jest",
+    "migrate": "node src/database/migrate.js",
+    "seed": "node src/database/seed.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.4.1",
+    "@fastify/helmet": "^11.1.1",
+    "@fastify/jwt": "^7.2.3",
+    "@fastify/postgres": "^5.2.0",
+    "@fastify/rate-limit": "^9.0.1",
+    "@fastify/static": "^6.12.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.24.3",
+    "pg": "^8.11.3",
+    "pino": "^8.16.2",
+    "pino-pretty": "^10.2.3",
+    "qrcode": "^1.5.3",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.1.0",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [
+    "ingressos",
+    "eventos",
+    "validação",
+    "qrcode",
+    "fastify",
+    "postgresql",
+    "m2a",
+    "Agência m2a"
+  ],
+  "author": "Jota / José Guilherme Pandolfi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seu-usuario/jpass.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seu-usuario/jpass/issues"
+  }
+}

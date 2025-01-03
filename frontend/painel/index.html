@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO -->
+    <title>Dashboard Principal | jPass - Sistema de Gerenciamento de Ingressos</title>
+    <meta name="description" content="Painel administrativo do jPass para gerenciamento e controle de ingressos">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Segurança -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; script-src 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <!-- Preload recursos críticos -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="scripts.js" as="script">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+</head>
+<body>
+    <div class="pagina-wrapper">
+        <!-- Cabeçalho -->
+        <header class="cabecalho-painel">
+            <div class="container">
+                <div class="cabecalho-esquerda">
+                    <img 
+                        src="../assets/logo.svg" 
+                        alt="Logo jPass" 
+                        width="120" 
+                        height="40" 
+                        class="logo">
+                    
+                    <div class="info-admin">
+                        <p class="saudacao">Olá, <span id="nomeAdmin">Administrador</span>!</p>
+                        <button 
+                            type="button" 
+                            class="botao-sair" 
+                            id="botaoSair"
+                            aria-label="Sair do sistema">
+                            Sair
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cabecalho-direita">
+                    <div class="cartao-info">
+                        <div class="info-item">
+                            <span class="info-label">Total de Ingressos</span>
+                            <span class="info-valor" id="totalIngressos">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Receita Total</span>
+                            <span class="info-valor" id="receitaTotal">R$ 0,00</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Receita em Caixa</span>
+                            <span class="info-valor" id="receitaCaixa">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="conteudo-principal">
+            <div class="container">
+                <!-- Tabela de Ingressos -->
+                <section class="secao-tabela">
+                    <h1>Ingressos Emitidos</h1>
+                    
+                    <div class="tabela-wrapper">
+                        <table class="tabela-ingressos">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Status</th>
+                                    <th>Lote</th>
+                                    <th>Preço</th>
+                                    <th>Data Emissão</th>
+                                    <th>Pagamento</th>
+                                    <th>Comprador Original</th>
+                                    <th>CPF Original</th>
+                                    <th>Proprietário Atual</th>
+                                    <th>CPF Atual</th>
+                                    <th>Vendedor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpoTabela">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginação -->
+                    <div class="paginacao">
+                        <button class="botao-pagina" id="paginaAnterior" disabled>Anterior</button>
+                        <span class="info-pagina">Página <span id="paginaAtual">1</span> de <span id="totalPaginas">1</span></span>
+                        <button class="botao-pagina" id="proximaPagina">Próxima</button>
+                    </div>
+                </section>
+
+                <!-- Ações -->
+                <section class="secao-acoes">
+                    <div class="acoes-esquerda">
+                        <button 
+                            type="button" 
+                            class="botao-principal" 
+                            id="botaoEmitir">
+                            Emitir Novo Ingresso
+                        </button>
+                        
+                        <div class="acoes-secundarias">
+                            <a href="transferir.html" class="link-acao">Transferir Ingresso</a>
+                            <a href="cassar.html" class="link-acao">Cassar Ingresso</a>
+                        </div>
+                    </div>
+
+                    <div class="acoes-direita">
+                        <button 
+                            type="button" 
+                            class="botao-validar" 
+                            id="botaoValidar">
+                            Validar Ingressos
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Modal de Loading -->
+        <div class="modal-loading" id="modalLoading" hidden>
+            <div class="loading-spinner"></div>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts.js" defer></script>
+    
+    <noscript>
+        <div class="mensagem-js-desativado">
+            Para utilizar este sistema, é necessário habilitar o JavaScript no seu navegador.
+        </div>
+    </noscript>
+</body>
+</html>

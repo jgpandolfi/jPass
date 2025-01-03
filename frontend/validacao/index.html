@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO -->
+    <title>Validação de Ingressos | jPass - Sistema de Gerenciamento de Ingressos</title>
+    <meta name="description" content="Sistema de validação de ingressos jPass - Controle de acesso seguro para eventos">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Segurança -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob:; script-src 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <!-- Preload recursos críticos -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="scripts.js" as="script">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+</head>
+<body>
+    <div class="pagina-wrapper">
+        <!-- Cabeçalho -->
+        <header class="cabecalho">
+            <div class="container">
+                <div class="cabecalho-conteudo">
+                    <img 
+                        src="../assets/logo.svg" 
+                        alt="Logo jPass" 
+                        width="120" 
+                        height="40" 
+                        class="logo">
+                    
+                    <button 
+                        type="button" 
+                        class="botao-voltar"
+                        id="botaoVoltar"
+                        aria-label="Voltar ao painel">
+                        Voltar ao Painel
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="conteudo-principal">
+            <div class="container">
+                <div class="validacao-wrapper">
+                    <!-- Ícone de Validação -->
+                    <div class="icone-validacao">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" class="icone-verificar">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        </svg>
+                    </div>
+
+                    <h1>Validar Ingresso</h1>
+
+                    <!-- Botões de Ação -->
+                    <div class="acoes-validacao">
+                        <button 
+                            type="button" 
+                            class="botao-principal"
+                            id="botaoQrCode">
+                            Checar QR Code
+                        </button>
+
+                        <button 
+                            type="button" 
+                            class="botao-secundario"
+                            id="botaoId">
+                            Checar ID Único
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal QR Code -->
+        <div class="modal" id="modalQrCode" hidden>
+            <div class="modal-conteudo">
+                <header class="modal-cabecalho">
+                    <h2>Escaneie o QR Code</h2>
+                    <button 
+                        type="button" 
+                        class="botao-fechar"
+                        id="fecharModalQr"
+                        aria-label="Fechar scanner">
+                        ×
+                    </button>
+                </header>
+
+                <div class="scanner-wrapper">
+                    <video id="scannerVideo" playsinline></video>
+                    <div class="scanner-overlay"></div>
+                </div>
+
+                <p class="scanner-instrucao">
+                    Posicione o QR Code do ingresso em frente à câmera
+                </p>
+            </div>
+        </div>
+
+        <!-- Modal ID -->
+        <div class="modal" id="modalId" hidden>
+            <div class="modal-conteudo">
+                <header class="modal-cabecalho">
+                    <h2>Digite o ID do Ingresso</h2>
+                    <button 
+                        type="button" 
+                        class="botao-fechar"
+                        id="fecharModalId"
+                        aria-label="Fechar formulário">
+                        ×
+                    </button>
+                </header>
+
+                <form id="formValidacao" class="formulario-validacao">
+                    <div class="campo-grupo">
+                        <label for="ingressoId">ID do Ingresso</label>
+                        <input 
+                            type="text" 
+                            id="ingressoId" 
+                            name="ingressoId" 
+                            required 
+                            placeholder="Digite o ID do ingresso"
+                            autocomplete="off"
+                            maxlength="36">
+                    </div>
+
+                    <button type="submit" class="botao-principal">
+                        Verificar Ingresso
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Resultado -->
+        <div class="modal" id="modalResultado" hidden>
+            <div class="modal-conteudo">
+                <div class="resultado-wrapper">
+                    <div class="resultado-icone">
+                        <!-- Ícone será inserido via JavaScript -->
+                    </div>
+
+                    <h2 id="resultadoTitulo"></h2>
+                    <p id="resultadoMensagem"></p>
+
+                    <div class="resultado-acoes" id="resultadoAcoes">
+                        <!-- Botões serão inseridos via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Loading -->
+        <div class="modal-loading" id="modalLoading" hidden>
+            <div class="loading-spinner"></div>
+            <p>Verificando ingresso...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts.js" defer></script>
+    
+    <noscript>
+        <div class="mensagem-js-desativado">
+            Para utilizar este sistema, é necessário habilitar o JavaScript no seu navegador.
+        </div>
+    </noscript>
+</body>
+</html>

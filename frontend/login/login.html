@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <!-- Metadados básicos -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO -->
+    <title>Login Administrativo | jPass - Sistema de Gerenciamento de Ingressos</title>
+    <meta name="description" content="Área de login administrativo do jPass, sistema seguro para gerenciamento e validação de ingressos de eventos">
+    <meta name="author" content="jPass">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="keywords" content="login, admin, ingressos, eventos, gerenciamento, validação">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Login Administrativo | jPass">
+    <meta property="og:description" content="Área de login administrativo do jPass, sistema seguro para gerenciamento e validação de ingressos de eventos">
+    <meta property="og:locale" content="pt_BR">
+    
+    <!-- Segurança -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; script-src 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="jPass Login">
+    
+    <!-- Preload recursos críticos -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="scripts.js" as="script">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//api.jpass.com.br">
+</head>
+<body>
+    <div class="pagina-wrapper">
+        <main class="container-login" role="main">
+            <div class="caixa-login">
+                <header class="cabecalho-login">
+                    <img 
+                        src="../assets/logo.svg" 
+                        alt="Logo jPass" 
+                        width="120" 
+                        height="40" 
+                        class="logo"
+                        loading="eager">
+                    <h1>Acesso Administrativo</h1>
+                    <p>Entre com suas credenciais para acessar o sistema</p>
+                </header>
+
+                <form 
+                    id="formLogin" 
+                    class="formulario-login" 
+                    autocomplete="off" 
+                    novalidate>
+                    
+                    <div class="grupo-form">
+                        <label for="email" class="campo-obrigatorio">E-mail</label>
+                        <div class="wrapper-input">
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                required 
+                                autocomplete="email"
+                                spellcheck="false"
+                                placeholder="Digite seu e-mail"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                aria-required="true"
+                                aria-describedby="erro-email">
+                            <span class="icone-input icone-email" aria-hidden="true"></span>
+                        </div>
+                        <span id="erro-email" class="mensagem-erro" role="alert"></span>
+                    </div>
+
+                    <div class="grupo-form">
+                        <label for="senha" class="campo-obrigatorio">Senha</label>
+                        <div class="wrapper-input">
+                            <input 
+                                type="password" 
+                                id="senha" 
+                                name="senha" 
+                                required
+                                autocomplete="current-password"
+                                placeholder="Digite sua senha"
+                                minlength="8"
+                                aria-required="true"
+                                aria-describedby="erro-senha">
+                            <button 
+                                type="button" 
+                                class="alternar-senha" 
+                                aria-label="Alternar visibilidade da senha"
+                                tabindex="0">
+                                <span class="icone-olho" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <span id="erro-senha" class="mensagem-erro" role="alert"></span>
+                    </div>
+
+                    <div class="opcoes-form">
+                        <label class="lembrar-login">
+                            <input 
+                                type="checkbox" 
+                                id="lembrar" 
+                                name="lembrar">
+                            <span class="texto-checkbox">Manter conectado</span>
+                        </label>
+                        <a href="../recuperar-senha/recuperar-senha.html" 
+                           class="esqueci-senha"
+                           rel="noopener">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+
+                    <div 
+                        class="container-alerta" 
+                        role="alert" 
+                        aria-live="polite">
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="botao-login" 
+                        id="botaoEnviar">
+                        <span class="texto-botao">Entrar</span>
+                        <span class="indicador-carregamento" aria-hidden="true"></span>
+                    </button>
+                </form>
+
+                <footer class="rodape-login">
+                    <p>
+                        Problemas para acessar? 
+                        <a href="../suporte/suporte.html" rel="noopener">
+                            Entre em contato
+                        </a>
+                    </p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts.js" defer></script>
+    <noscript>
+        <div class="mensagem-js-desativado">
+            Para utilizar este sistema, é necessário habilitar o JavaScript no seu navegador.
+        </div>
+    </noscript>
+</body>
+</html>

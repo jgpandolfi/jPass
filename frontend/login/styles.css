@@ -1,0 +1,305 @@
+/* Reset e Variáveis */
+:root {
+    /* Cores */
+    --cor-primaria: #2563eb;
+    --cor-primaria-hover: #1d4ed8;
+    --cor-fundo: #f8fafc;
+    --cor-fundo-caixa: #ffffff;
+    --cor-texto: #1e293b;
+    --cor-texto-secundario: #64748b;
+    --cor-borda: #e2e8f0;
+    --cor-erro: #dc2626;
+    --cor-sucesso: #16a34a;
+    --cor-alerta: #eab308;
+    
+    /* Sombras */
+    --sombra-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --sombra-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --sombra-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    
+    /* Fontes */
+    --fonte-principal: 'Inter', system-ui, sans-serif;
+    --fonte-tamanho-base: 1rem;
+    
+    /* Transições */
+    --transicao-padrao: all 0.2s ease-in-out;
+    
+    /* Border Radius */
+    --borda-raio-sm: 0.375rem;
+    --borda-raio-md: 0.5rem;
+    --borda-raio-lg: 0.75rem;
+}
+
+/* Reset Básico */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos Base */
+html {
+    font-size: 16px;
+    height: 100%;
+}
+
+body {
+    font-family: var(--fonte-principal);
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Container Principal */
+.pagina-wrapper {
+    width: 100%;
+    max-width: 28rem;
+    margin: auto;
+}
+
+.container-login {
+    background-color: var(--cor-fundo-caixa);
+    border-radius: var(--borda-raio-lg);
+    box-shadow: var(--sombra-lg);
+    padding: 2rem;
+}
+
+/* Cabeçalho */
+.cabecalho-login {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.cabecalho-login .logo {
+    margin-bottom: 1.5rem;
+}
+
+.cabecalho-login h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin-bottom: 0.5rem;
+}
+
+.cabecalho-login p {
+    color: var(--cor-texto-secundario);
+    font-size: 0.875rem;
+}
+
+/* Formulário */
+.formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.grupo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.campo-obrigatorio {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--cor-texto);
+}
+
+.campo-obrigatorio::after {
+    content: "*";
+    color: var(--cor-erro);
+    margin-left: 0.25rem;
+}
+
+.wrapper-input {
+    position: relative;
+}
+
+/* Inputs */
+.wrapper-input input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-right: 2.5rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--borda-raio-md);
+    font-size: var(--fonte-tamanho-base);
+    transition: var(--transicao-padrao);
+    background-color: var(--cor-fundo);
+}
+
+.wrapper-input input:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.wrapper-input input::placeholder {
+    color: var(--cor-texto-secundario);
+}
+
+/* Ícones nos Inputs */
+.icone-input {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cor-texto-secundario);
+    pointer-events: none;
+}
+
+/* Botão Alternar Senha */
+.alternar-senha {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: var(--cor-texto-secundario);
+}
+
+/* Opções do Formulário */
+.opcoes-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -0.5rem;
+}
+
+.lembrar-login {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.texto-checkbox {
+    font-size: 0.875rem;
+    color: var(--cor-texto-secundario);
+}
+
+/* Links */
+.esqueci-senha {
+    font-size: 0.875rem;
+    color: var(--cor-primaria);
+    text-decoration: none;
+    transition: var(--transicao-padrao);
+}
+
+.esqueci-senha:hover {
+    color: var(--cor-primaria-hover);
+    text-decoration: underline;
+}
+
+/* Botão de Login */
+.botao-login {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    border-radius: var(--borda-raio-md);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.botao-login:hover {
+    background-color: var(--cor-primaria-hover);
+}
+
+.botao-login:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+/* Mensagens de Erro */
+.mensagem-erro {
+    font-size: 0.875rem;
+    color: var(--cor-erro);
+    margin-top: 0.25rem;
+}
+
+/* Container de Alerta */
+.container-alerta {
+    min-height: 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+/* Rodapé */
+.rodape-login {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    color: var(--cor-texto-secundario);
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+    .container-login {
+        padding: 1.5rem;
+    }
+
+    .opcoes-form {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}
+
+/* Animações */
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.indicador-carregamento {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #ffffff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: girar 0.6s linear infinite;
+    display: none;
+}
+
+/* Estados de Carregamento */
+.botao-login[data-loading="true"] {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.botao-login[data-loading="true"] .texto-botao {
+    display: none;
+}
+
+.botao-login[data-loading="true"] .indicador-carregamento {
+    display: block;
+}
+
+/* Mensagem JavaScript Desativado */
+.mensagem-js-desativado {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--cor-erro);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    z-index: 9999;
+}
