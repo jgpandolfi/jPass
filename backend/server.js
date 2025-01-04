@@ -86,31 +86,38 @@ const servidor = Fastify({
 
 // Plugins e middlewares
 async function registrarPlugins() {
-  // Segurança
-  await servidor.register(fastifyHelmet)
-  await servidor.register(fastifyRateLimit, CONFIG.RATE_LIMIT)
+  console.log("⌛ Registrando plugins...")
+  try {
+    // Segurança
+    await servidor.register(fastifyHelmet)
+    await servidor.register(fastifyRateLimit, CONFIG.RATE_LIMIT)
 
-  // CORS
-  await servidor.register(fastifyCors, {
-    origin: CONFIG.FRONTEND_URL,
-    credentials: true,
-  })
+    // CORS
+    await servidor.register(fastifyCors, {
+      origin: CONFIG.FRONTEND_URL,
+      credentials: true,
+    })
 
-  // JWT
-  await servidor.register(fastifyJwt, {
-    secret: CONFIG.JWT_SECRET,
-  })
+    // JWT
+    await servidor.register(fastifyJwt, {
+      secret: CONFIG.JWT_SECRET,
+    })
 
-  // PostgreSQL
-  await servidor.register(fastifyPostgres, {
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  })
+    // PostgreSQL
+    await servidor.register(fastifyPostgres, {
+      connectionString: CONFIG.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    })
+    console.log("✅ Plugins registrados com sucesso")
+  } catch (erro) {
+    console.log("❌ Erro ao registrar plugins:", erro)
+    throw erro
+  }
 }
 
-// Verificar e criar tabelas no Banco de Dados
+// Função para verificar e criar tabelas
 async function inicializarBancoDeDados() {
   console.log("⌛ Inicializando banco de dados...")
   try {
@@ -146,7 +153,7 @@ async function inicializarBancoDeDados() {
 async function criarAdministradorMaster() {
   if (!CONFIG.ADMIN_EMAIL || !CONFIG.ADMIN_PASSWORD) {
     console.log(
-      "❌ Credenciais do administrador master não configuradas no .env!"
+      "❌ Credenciais do administrador master não configuradas no .env"
     )
     return
   }
@@ -158,17 +165,14 @@ async function criarAdministradorMaster() {
     )
 
     if (rows.length === 0) {
-      console.log("⌛ Criando administrador master no Banco de Dados...")
       const senhaHash = await hash(CONFIG.ADMIN_PASSWORD, CONFIG.SALT_ROUNDS)
       await servidor.pg.query(
         "INSERT INTO administradores (email, senha_hash) VALUES ($1, $2)",
         [CONFIG.ADMIN_EMAIL, senhaHash]
       )
-      console.log(
-        "✅ Administrador master inserido com sucesso no Banco de Dados!"
-      )
+      console.log("✅ Administrador master criado com sucesso")
     } else {
-      console.log("✅ Administrador Master já consta o Banco de Daods!")
+      console.log("✅ Administrador master já existe")
     }
   } catch (erro) {
     console.log("❌ Erro ao criar administrador master:", erro)
@@ -176,7 +180,7 @@ async function criarAdministradorMaster() {
   }
 }
 
-// Rota de login
+// Rotas de autenticação
 async function rotasAutenticacao() {
   servidor.post(
     "/auth/login",
@@ -194,9 +198,7 @@ async function rotasAutenticacao() {
     },
     async (requisicao, resposta) => {
       const { email, senha } = requisicao.body
-
       try {
-        // Primeiro, verificar se é o admin master
         if (email === CONFIG.ADMIN_EMAIL && senha === CONFIG.ADMIN_PASSWORD) {
           console.log("✅ Login bem-sucedido como administrador master")
           const token = servidor.jwt.sign(
@@ -206,7 +208,6 @@ async function rotasAutenticacao() {
           return resposta.send({ sucesso: true, token })
         }
 
-        // Se não for admin master, verificar no banco
         const { rows } = await servidor.pg.query(
           "SELECT * FROM administradores WHERE email = $1",
           [email]
@@ -236,7 +237,6 @@ async function rotasAutenticacao() {
           { id: admin.id, email: admin.email },
           { expiresIn: "8h" }
         )
-
         return resposta.send({ sucesso: true, token })
       } catch (erro) {
         console.log("❌ Erro no processo de login:", erro)
@@ -249,17 +249,21 @@ async function rotasAutenticacao() {
   )
 }
 
+// Rotas de ingressos (placeholder)
+async function rotasIngressos() {
+  console.log("⌛ Registrando rotas de ingressos...")
+  // Implementar rotas de ingressos posteriormente
+}
+
 // Inicialização do servidor
 async function iniciarServidor() {
   try {
-    // Verificar variáveis de ambiente obrigatórias
     const varaveisObrigatorias = [
       "DATABASE_URL",
       "JWT_SECRET",
       "ADMIN_EMAIL",
       "ADMIN_PASSWORD",
     ]
-
     const variaveisFaltando = varaveisObrigatorias.filter(
       (variavel) => !process.env[variavel]
     )
@@ -270,21 +274,15 @@ async function iniciarServidor() {
       )
     }
 
-    // Registrar plugins
     await registrarPlugins()
-
-    // Inicializar banco de dados
     await inicializarBancoDeDados()
-
-    // Registrar rotas
     await rotasAutenticacao()
     await rotasIngressos()
 
-    // Iniciar servidor
     await servidor.listen({ port: CONFIG.PORTA, host: "0.0.0.0" })
-    servidor.log.info(`Servidor rodando na porta ${CONFIG.PORTA}`)
+    console.log(`✅ Servidor rodando na porta ${CONFIG.PORTA}`)
   } catch (erro) {
-    servidor.log.error("Erro fatal ao iniciar servidor:", erro)
+    console.log("❌ Erro fatal ao iniciar servidor:", erro)
     process.exit(1)
   }
 }
