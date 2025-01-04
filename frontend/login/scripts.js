@@ -92,6 +92,7 @@ class GerenciadorLogin {
     await this.realizarLogin()
   }
 
+  // Verificar dados de login
   async realizarLogin() {
     this.iniciarCarregamento()
 
@@ -104,7 +105,7 @@ class GerenciadorLogin {
     try {
       const resposta = await this.enviarRequisicao("/auth/login", dadosLogin)
 
-      if (resposta.sucesso) {
+      if (resposta.sucesso && resposta.token) {
         this.salvarDadosLogin(dadosLogin)
         await this.redirecionarAposLogin(resposta.token)
       } else {
@@ -237,7 +238,7 @@ class GerenciadorLogin {
     sessionStorage.setItem("authToken", token)
 
     // Redirecionar para a página principal
-    window.location.href = "/dashboard/index.html"
+    window.location.href = "/painel/"
   }
 }
 
