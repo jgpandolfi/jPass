@@ -124,6 +124,8 @@ class GerenciadorLogin {
     try {
       const resposta = await fetch(`${CONFIG.API_URL}${endpoint}`, {
         method: "POST",
+        mode: "cors",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           "X-Request-Timestamp": timestamp.toString(),
