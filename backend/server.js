@@ -93,13 +93,28 @@ async function registrarPlugins() {
     await servidor.register(fastifyRateLimit, CONFIG.RATE_LIMIT)
 
     // CORS
+    // CORS
     await servidor.register(fastifyCors, {
-      origin: process.env.FRONTEND_URL,
-      credentials: process.env.CORS_CREDENTIALS === "true",
-      methods: process.env.CORS_METHODS.split(","),
-      allowedHeaders: process.env.CORS_HEADERS.split(","),
-      maxAge: parseInt(process.env.SESSION_DURATION),
-      exposedHeaders: process.env.CORS_HEADERS.split(","),
+      origin: [process.env.FRONTEND_URL],
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "X-Request-Timestamp",
+        "X-Client-Version",
+      ],
+      exposedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "X-Request-Timestamp",
+        "X-Client-Version",
+      ],
+      maxAge: 28800000, // 8 horas em milissegundos
+      preflight: true,
+      strictPreflight: false,
     })
 
     // JWT
