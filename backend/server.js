@@ -249,10 +249,177 @@ async function rotasAutenticacao() {
   )
 }
 
-// Rotas de ingressos (placeholder)
+// Middleware de autenticação (utilizado nas requisições)
+async function autenticarRequisicao(requisicao, resposta) {
+  try {
+    await requisicao.jwtVerify()
+    // Verificar se o token pertence a um admin válido
+    const adminId = requisicao.user.id
+    if (adminId === "master") return
+
+    const { rows } = await servidor.pg.query(
+      "SELECT id FROM administradores WHERE id = $1",
+      [adminId]
+    )
+
+    if (!rows[0]) throw new Error("Admin não encontrado")
+  } catch (erro) {
+    resposta.code(401).send({
+      sucesso: false,
+      mensagem: "Não autorizado",
+    })
+  }
+}
+
+// Rotas de ingressos
 async function rotasIngressos() {
   console.log("⌛ Registrando rotas de ingressos...")
-  // Implementar rotas de ingressos posteriormente
+
+  // Rota para obter estatísticas
+  servidor.get(
+    "/ingressos/estatisticas",
+    {
+      onRequest: [autenticarRequisicao],
+    },
+    async (requisicao, resposta) => {
+      try {
+        const { rows } = await servidor.pg.query(`
+                SELECT 
+                    COUNT(*) as total,
+                    SUM(preco) as receita_total,
+                    SUM(CASE WHEN pagamento_status = true THEN preco ELSE 0 END) as receita_caixa
+                FROM ingressos
+                WHERE status != 'cancelado'
+            `)
+
+        return resposta.send({
+          sucesso: true,
+          total: parseInt(rows[0].total),
+          receitaTotal: parseFloat(rows[0].receita_total) || 0,
+          receitaCaixa: parseFloat(rows[0].receita_caixa) || 0,
+        })
+      } catch (erro) {
+        console.log("❌ Erro ao obter estatísticas:", erro)
+        return resposta.code(500).send({
+          sucesso: false,
+          mensagem: "Erro ao carregar estatísticas",
+        })
+      }
+    }
+  )
+
+  // Rota para listar ingressos com paginação
+  servidor.get(
+    "/ingressos",
+    {
+      onRequest: [autenticarRequisicao],
+      schema: {
+        querystring: {
+          type: "object",
+          properties: {
+            pagina: { type: "integer", minimum: 1, default: 1 },
+            limite: { type: "integer", minimum: 1, maximum: 100, default: 10 },
+          },
+        },
+      },
+    },
+    async (requisicao, resposta) => {
+      try {
+        const { pagina = 1, limite = 10 } = requisicao.query
+        const offset = (pagina - 1) * limite
+
+        // Consulta paginada
+        const { rows: ingressos } = await servidor.pg.query(
+          `
+                SELECT 
+                    i.id,
+                    i.status,
+                    i.lote,
+                    i.preco,
+                    i.criado_em,
+                    i.pagamento_status,
+                    i.pagamento_verificado_em,
+                    i.forma_pagamento,
+                    i.comprador_original_nome,
+                    i.comprador_original_cpf,
+                    i.proprietario_atual_nome,
+                    i.proprietario_atual_cpf,
+                    a.email as vendedor_nome
+                FROM ingressos i
+                LEFT JOIN administradores a ON i.vendedor_id = a.id
+                ORDER BY i.criado_em DESC
+                LIMIT $1 OFFSET $2
+            `,
+          [limite, offset]
+        )
+
+        // Contar total de registros
+        const {
+          rows: [{ total }],
+        } = await servidor.pg.query("SELECT COUNT(*) as total FROM ingressos")
+
+        return resposta.send({
+          sucesso: true,
+          dados: ingressos,
+          total: parseInt(total),
+          pagina,
+          limite,
+          totalPaginas: Math.ceil(total / limite),
+        })
+      } catch (erro) {
+        console.log("❌ Erro ao listar ingressos:", erro)
+        return resposta.code(500).send({
+          sucesso: false,
+          mensagem: "Erro ao carregar ingressos",
+        })
+      }
+    }
+  )
+
+  // Rota para buscar detalhes de um ingresso específico
+  servidor.get(
+    "/ingressos/:id",
+    {
+      onRequest: [autenticarRequisicao],
+      schema: {
+        params: {
+          type: "object",
+          required: ["id"],
+          properties: {
+            id: { type: "string", format: "uuid" },
+          },
+        },
+      },
+    },
+    async (requisicao, resposta) => {
+      try {
+        const { rows } = await servidor.pg.query(
+          "SELECT * FROM ingressos WHERE id = $1",
+          [requisicao.params.id]
+        )
+
+        if (!rows[0]) {
+          return resposta.code(404).send({
+            sucesso: false,
+            mensagem: "Ingresso não encontrado",
+          })
+        }
+
+        return resposta.send({
+          sucesso: true,
+          ingresso: rows[0],
+        })
+      } catch (erro) {
+        console.log("❌ Erro ao buscar ingresso:", erro)
+        return resposta.code(500).send({
+          sucesso: false,
+          mensagem: "Erro ao buscar ingresso",
+        })
+      }
+    }
+  )
+
+  console.log("✅ Rotas de ingressos registradas com sucesso")
 }
 
 // Inicialização do servidor
