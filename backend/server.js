@@ -303,19 +303,19 @@ async function rotasIngressos() {
     async (requisicao, resposta) => {
       try {
         const { rows } = await servidor.pg.query(`
-                SELECT 
-                    COUNT(*) as total,
-                    SUM(preco) as receita_total,
-                    SUM(CASE WHEN pagamento_status = true THEN preco ELSE 0 END) as receita_caixa
-                FROM ingressos
-                WHERE status != 'cancelado'
-            `)
+            SELECT
+                COUNT(*) as total,
+                COALESCE(SUM(preco), 0) as receita_total,
+                COALESCE(SUM(CASE WHEN pagamento_status = true THEN preco ELSE 0 END), 0) as receita_caixa
+            FROM ingressos
+            WHERE status != 'cancelado'
+        `)
 
         return resposta.send({
           sucesso: true,
-          total: parseInt(rows[0].total),
-          receitaTotal: parseFloat(rows[0].receita_total) || 0,
-          receitaCaixa: parseFloat(rows[0].receita_caixa) || 0,
+          total: parseInt(rows[0].total || 0),
+          receitaTotal: parseFloat(rows[0].receita_total || 0),
+          receitaCaixa: parseFloat(rows[0].receita_caixa || 0),
         })
       } catch (erro) {
         console.log("❌ Erro ao obter estatísticas:", erro)
@@ -327,63 +327,52 @@ async function rotasIngressos() {
     }
   )
 
-  // Rota para listar ingressos com paginação
+  // Rota para listar ingressos
   servidor.get(
     "/ingressos",
     {
       onRequest: [autenticarRequisicao],
-      schema: {
-        querystring: {
-          type: "object",
-          properties: {
-            pagina: { type: "integer", minimum: 1, default: 1 },
-            limite: { type: "integer", minimum: 1, maximum: 100, default: 10 },
-          },
-        },
-      },
     },
     async (requisicao, resposta) => {
       try {
         const { pagina = 1, limite = 10 } = requisicao.query
         const offset = (pagina - 1) * limite
 
-        // Consulta paginada
         const { rows: ingressos } = await servidor.pg.query(
           `
-                SELECT 
-                    i.id,
-                    i.status,
-                    i.lote,
-                    i.preco,
-                    i.criado_em,
-                    i.pagamento_status,
-                    i.pagamento_verificado_em,
-                    i.forma_pagamento,
-                    i.comprador_original_nome,
-                    i.comprador_original_cpf,
-                    i.proprietario_atual_nome,
-                    i.proprietario_atual_cpf,
-                    a.email as vendedor_nome
-                FROM ingressos i
-                LEFT JOIN administradores a ON i.vendedor_id = a.id
-                ORDER BY i.criado_em DESC
-                LIMIT $1 OFFSET $2
-            `,
+            SELECT
+                i.id,
+                i.status,
+                i.lote,
+                i.preco,
+                i.criado_em,
+                i.pagamento_status,
+                i.pagamento_verificado_em,
+                i.forma_pagamento,
+                i.comprador_original_nome,
+                i.comprador_original_cpf,
+                i.proprietario_atual_nome,
+                i.proprietario_atual_cpf,
+                a.email as vendedor_nome
+            FROM ingressos i
+            LEFT JOIN administradores a ON i.vendedor_id = a.id
+            ORDER BY i.criado_em DESC
+            LIMIT $1 OFFSET $2
+        `,
           [limite, offset]
         )
 
-        // Contar total de registros
         const {
           rows: [{ total }],
         } = await servidor.pg.query("SELECT COUNT(*) as total FROM ingressos")
 
         return resposta.send({
           sucesso: true,
-          dados: ingressos,
-          total: parseInt(total),
+          dados: ingressos || [],
+          total: parseInt(total || 0),
           pagina,
           limite,
-          totalPaginas: Math.ceil(total / limite),
+          totalPaginas: Math.ceil((total || 0) / limite),
         })
       } catch (erro) {
         console.log("❌ Erro ao listar ingressos:", erro)
